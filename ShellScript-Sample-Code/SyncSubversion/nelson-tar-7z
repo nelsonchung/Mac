@@ -1,0 +1,33 @@
+#!/bin/bash
+  
+  cur_path=$(pwd)
+  echo $HOME 
+  echo $(pwd)
+  echo $cur_path
+  icount=1
+  number=25
+  nowdate=`date +%F`
+  mkdir -p $cur_path/branches/$nowdate
+  for icount in $(seq 1 $number)
+  	do
+           echo $icount
+           foldername=`svn list $1 | xargs -0 | sed -n "${icount},${icount}p" | sed "s/\///g"`
+	   echo $foldername
+	   cd $cur_path/branches/
+	   #if [ -d $foldername ] && [ -n $foldername ]  ;then
+	   #if [ -n $foldername ] ;then
+	   #if [ $foldername != "" ] ;then
+	   # if test -d $foldername #空字串也說有存在, 奇怪奇怪
+	   	#then echo "The folder is exist."
+	   	if test -z $foldername 
+	   		then echo "foldername is null"
+	   	else
+	   		#rm $foldername.tar.gz #it mean this is first time to create tar file
+	   		#tar zvcf $cur_path/branches/$nowdate/$foldername.tar.gz $foldername/
+	   		7z a -mx=9 -mmt $cur_path/branches/$nowdate/$foldername.7z $foldername/
+		fi
+	   #else
+	   	#echo "This folder is not exist."
+	   #fi
+        done
+

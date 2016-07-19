@@ -1,0 +1,18 @@
+
+Nelson1:=test1
+Nelson2=test2
+Nelson3:=$(Nelson1)
+Nelson4=$(Nelson2)
+
+all: 
+	@echo "all"
+	@echo $(Nelson1)
+	@echo $(Nelson2)
+	@echo $(Nelson3)
+	@echo $(Nelson4)
+
+Nelson1:=apple
+Nelson2=apple2
+build:
+	@echo "build"
+	@echo $(Nelson1)

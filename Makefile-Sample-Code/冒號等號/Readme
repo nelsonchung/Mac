@@ -1,0 +1,5 @@
+執行以下指令可以得知:= 以及=的優先權順序
+make -f NelsoMake
+
+另外可以執行以下指令，帶入參數的優先權會更高
+make -f NelsoMake Nelson1=TTTT

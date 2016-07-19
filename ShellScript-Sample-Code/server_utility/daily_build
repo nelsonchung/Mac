@@ -1,0 +1,67 @@
+#!/bin/bash
+#
+# This is the daily build script to build the system.
+# The target of this script is to build the system by single build.
+
+daily_build_folder=daily_huawei
+project_home=http://172.18.1.5/svn/wimax/mt7119/branches/huawei
+from_email=primesw@pesicn.com
+# For send mail to all of the mail, use space separated
+to_email="double_chiang@pesi.com.tw lenny@pesicn.com dgliu@pesicn.com bwang@pesicn.com yffeng@pesicn.com ivan_chen@pesi.com.tw"
+# to_email="yffeng@pesicn.com"
+smtp_host=172.18.1.6
+smtp_username=primesw
+smtp_password=pesiprime
+logfile=verify_sdk.log
+
+export LC_CTYPE=en_US.UTF-8
+
+# first clean all of the direcotry
+rm -rf $daily_build_folder
+
+# check out into a daily build folder
+svn checkout --non-interactive $project_home $daily_build_folder > $logfile 2>&1
+cd $daily_build_folder
+
+# execute the script
+source env.source
+./verify_sdk.pl > $logfile 2>&1
+message="Daily build project located in "  
+message+=`pwd`
+message+="\n\n\n"
+message+="------------------- log files cut from here ------------------\n"
+# message+=`cat $logfile`
+
+email_subject="Daily build Huawei Project, build finished at "
+email_subject+=`date +%c`
+
+# Since we want to send mail only in non-interactive login
+# we will check $LANG environment variable.
+
+target_backup_path=/home/archive/wimax_archive/daily_build
+web_update_file=web_update.tar.gz
+wimax_bin_file=wimax_cpe.bin
+wimax_bin_file_gz=wimax_cpe_`whoami`_`date +%Y%m%d`.bin.gz
+
+# if $LANG empty 
+# and if web.tar.gz wimax_cpe.bin are not generated, it will not be copyed
+# copy web.tar.gz to /home/archive/wimax_archive/daily_build//web_%user_%date.tar.gz
+# send out the log file
+# endif
+
+if [ -z $LANG ]; then
+  cd ./work/flashimg
+ if [ -f $web_update_file ] && [ -f $wimax_bin_file ]; then
+  cp $web_update_file $target_backup_path/web_update_`whoami`_`date +%Y%m%d`.tar.gz
+  gzip $wimax_bin_file
+  cp wimax_cpe.bin.gz $target_backup_path/$wimax_bin_file_gz
+  cd ../../
+  echo "$web_update_file and $wimax_bin_file had be copyed to $target_backup_path!" >>$logfile 2>&1
+  message+=`cat $logfile`
+  /usr/local/bin/sendEmail -f $from_email -t $to_email -xu $smtp_username -xp $smtp_password -s $smtp_host -u $email_subject -m "${message}"
+ else
+  echo "Generate web update Tarball and .bin file failed..." >>$logfile 2>&1
+  message+=`cat $logfile`
+  /usr/local/bin/sendEmail -f $from_email -t $to_email -xu $smtp_username -xp $smtp_password -s $smtp_host -u $email_subject -m "${message}"
+ fi
+fi

@@ -1,0 +1,20 @@
+upgrade_info="/etc/updinfo"
+BBB(){
+	#record PackageSize, PackageDate
+		echo $downloadresult=success >> $upgrade_info
+		echo $thenumberoffile=1 >> $upgrade_info
+		tmpdate=`ls -lh $image_tar | cut -c 44-55`
+		echo $packagedate $tmpdate >> $upgrade_info
+		tmpsize=`ls -lh *.tar.gz | cut -c 39-42`
+		echo $packagesize $tmpsize >> $upgrade_info
+		tmpoldfwver=`sncfg get FW_VER | cut -d "\"" -f 2`
+		echo $versionbeforeupg $tmpoldfwver >> $upgrade_info
+		tmpsystemtimeY=`date +%Y`
+		tmpsystemtimeM=`date +%m`
+		tmpsystemtimeD=`date +%d`
+		tmpsystemtimehms=`date +%T`
+		echo $systemtime=$tmpsystemtimeY $tmpsystemtimeM $tmpsystemtimeD $tmpsystemtimehms >> $upgrade_info
+
+}
+
+BBB

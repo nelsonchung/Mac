@@ -1,0 +1,11 @@
+#!/bin/bash
+  
+  icount=1
+  number=25
+  for icount in $(seq 1 $number)
+  	do
+           echo $icount
+           foldername=`svn list $1 | xargs -0 | sed -n "${icount},${icount+1}p"`
+           svn checkout $1/$foldername ./branches/$foldername
+        done
+

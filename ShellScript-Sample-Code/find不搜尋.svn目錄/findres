@@ -1,0 +1,2 @@
+#find . ! -path "*.svn*" -name "*.c" -o -name "*.h" -exec grep --color -n $1 {} + 
+find . ! -path "*.svn*" -name "*.res" -exec grep --color -n "$1" {} + 

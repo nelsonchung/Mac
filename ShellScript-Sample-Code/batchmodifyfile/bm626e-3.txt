@@ -1,0 +1,1 @@
+<script language="JavaScript" src="../js/bm626e_util.js"></script>
